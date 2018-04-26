@@ -1,0 +1,17 @@
+[[source]]
+
+url = "https://github.com/Insekta/insekta-docs"
+verify_ssl = true
+name = "insekta-docs"
+
+
+[dev-packages]
+
+
+
+[packages]
+
+
+
+[requires]
+
