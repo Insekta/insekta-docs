@@ -25,4 +25,5 @@ Administration
 
    user/index
    group/index
+   scenario/index
 
