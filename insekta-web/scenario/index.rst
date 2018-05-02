@@ -195,13 +195,11 @@ First of all, you have to create a Scenario. That's can be done after logging in
 presented on picture below.
 
 .. image:: /_static/scenarios_1.JPG
-  :width: 400
   :alt: Add scenario
 
 After clicking on 'ADD SCENARIO' button, you will get next view:
 
 .. image:: /_static/scenarios_2.JPG
-  :width: 400
   :alt: Fill mandatory fields
 
 You have to fill mandatory fields in the following way:
@@ -216,29 +214,25 @@ You have to fill mandatory fields in the following way:
 After that, by clicking on the 'Save' button 'Scenario' is created and you will get next view:
 
 .. image:: /_static/scenarios_3.JPG
-  :width: 400
   :alt: List of scenarios
 
 
-  Create Course
+Create Course
 ------------------------------
 
 If you want to be able to create a 'Scenario Group', first of all, you have to create a Course. Option for this action is in the same fild as 'Scenarios' option. After you click on th e 'Courses' option, you suppose to see the view which is presented on picture below.
 
 .. image:: /_static/course_1.JPG
-  :width: 400
   :alt: Add course
 
 After clicking on 'ADD SCENARIO' button, you will get next view: In that view you have to fill mandatory(red) fields and don't forget to check enable checkbox.
 
 .. image:: /_static/course_2.JPG
-  :width: 400
   :alt: Fill mandatory fields
 
 After that, by clicking on the 'Save' button 'Course' is created and you will get next view:
 
 .. image:: /_static/course_3.JPG
-  :width: 400
   :alt: List of courses
 
 Create Scenario Group
@@ -247,17 +241,14 @@ Create Scenario Group
 Finally, after 'Scenario' and 'Course' has been made, you are able to create a 'Scenario group'. Option for this action is in the same fild as 'Scenarios' and 'Courses'. After you click on the 'Scenario groups', you suppose to see the view which is presented on picture below.
 
 .. image:: /_static/groups_1.JPG
-  :width: 400
   :alt: Add Scenario group
 
 After clicking on 'ADD SCENARIO GROUP' button, you will get next view. In that view you have to fill mandatory(red) fields:
 
 .. image:: /_static/groups_2.JPG
-  :width: 400
   :alt: Fill mandatory fields
 
-  As you can see, two mandatory fields requires selection of the 'Course' and 'Scenario'. That's the reason because this two entities suppose to be created before 'Scenario group'. After that, by clicking on the 'Save' button 'Scenario group' is created and you will get next view:
+As you can see, two mandatory fields requires selection of the 'Course' and 'Scenario'. That's the reason because this two entities suppose to be created before 'Scenario group'. After that, by clicking on the 'Save' button 'Scenario group' is created and you will get next view:
 
-  .. image:: /_static/groups_3.JPG
-  :width: 400
-  :alt: List of Scenario groups
+.. image:: /_static/groups_3.JPG
+   :alt: List of Scenario groups
