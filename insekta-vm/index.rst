@@ -16,3 +16,9 @@ The installation guide to the insekta-vm project is documented within the instal
 
 Administration
 -------------------------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   vm/index
