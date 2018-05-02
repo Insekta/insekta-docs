@@ -24,4 +24,5 @@ Administration
    :caption: Contents:
 
    user/index
+   group/index
 
