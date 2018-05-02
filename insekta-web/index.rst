@@ -23,5 +23,5 @@ Administration
    :maxdepth: 2
    :caption: Contents:
 
-   admin/user
+   user/index
 
