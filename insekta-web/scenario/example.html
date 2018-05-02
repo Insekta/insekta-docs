@@ -1,0 +1,444 @@
+<h3>Allgemeines</h3>
+<p data-comment-id="hncopwog">
+    Ein Thema wird in Insekta intern als "Szenario" bezeichnet. Dies ermöglicht die Abgrenzung zwischem dem Thema, das inhaltlich
+    behandelt wird (das "Thema") und dem Thema, das die technische Einheit (als Bündel von mehreren Dateien) darstellt (das
+    "Szenario").
+</p>
+<p data-comment-id="jeod8hxn">
+    Ein Szenario wird hauptsächlich durch HTML mit zusätzlichen Funktionen beschrieben. Dabei ist es auch möglich Bilder, JavaScript
+    und andere statische Dateien einzubinden. Die zusätzlichen Funktionen ermöglichen es interaktive Elemente oder besondere
+    Formatierungen in das Szenario einzubinden.
+</p>
+<p data-comment-id="fnkg7dh7">
+    Diese Datei ist genau genommen ein
+    <a href="http://jinja.pocoo.org/">Jinja</a>-Template, das von Insekta beim Aufruf gerendert wird. Dieses Beispielszenario geht nur grob auf die Syntax
+    ein, für genaueres sollte die
+    <a href="http://jinja.pocoo.org/docs/dev/templates/">Template-Designer-Dokumentation</a> befragt werden.
+</p>
+
+{#
+<h3>Dateistruktur</h3>
+
+<pre>
+example
+├── meta.json
+├── scenario.html
+└── static
+    └── insekta.png
+</pre>
+
+<dl>
+    <dt>meta.json</dt>
+    <dd>Enthält die Metadaten zum Szenario.</dd>
+    <dt>scenario.html</dt>
+    <dd>Enthält die Szenariobeschreibung</dd>
+</dl>
+#}
+
+<h3>Konventionen</h3>
+
+<h4>Überschriften</h4>
+<p data-comment-id="pmlr4nhz">
+    Überschriften sollten mit der dritten Ebene (
+    <code>&lt;h3&gt;</code>) begonnen werden, da die erste bereits für die Projektüberschrift ("Insekta") und die zweite für den Titel des Themas
+    ("Beispielszenario") vergeben ist. Generell wird empfohlen nicht zuviele Themen in einem Szenario unter verschiedenen
+    Überschriften unterzubringen. Stattdessen sollten einzelne Szenarien erstellt werden.
+</p>
+
+<h4>Absätze</h4>
+<p data-comment-id="xsc26qao">
+    Es wird empfohlen sämtlichen Text in Absätze mit dem
+    <code>&lt;p&gt;</code>-Tag zu gliedern. Dies ermöglicht ein Kommentieren einzelner Absätze, sofern diese zum Kommentieren markiert sind. Das
+    Markieren erfolgt über das Hinzufügen eines Attributes
+    <code>data-comment-id</code> mit einem für das jeweilige Szenario eindeutigen Wert als Identifier (alphanumerisch und Bindestriche, max. 64 Zeichen).
+    Ein kommentierbarer Absatz wird durch eine kleine Sprechblase am Beginn des Absatzes gekennzeichnet. Es wird empfohlen
+    Absätze generell kommentierbar zu machen.
+</p>
+
+<p data-comment-id="cgjy7dmn">
+    Folgendes Beispiel zeigt einen kommentierbaren Absatz:
+</p>
+{% call code(language='html') %}
+<p data-comment-id="nked2qcf">
+    Dieser Abschnitt kann kommentiert werden.
+</p>
+{% endcall %}
+
+<p data-comment-id="wck3m7u6">
+    Um das
+    <code>data-comment-id</code>-Attribut auf einfache Weise hinzuzufügen, kann das
+    <code>annotate-comments.py</code>-Script verwendet werden. Dieses sucht nach
+    <code>&lt;pc&gt;</code>-Tags und ersetzt sie durch einen
+    <code>&lt;p&gt;</code>-Tag mit dem
+    <code>data-comment-id</code>-Attribut.
+</p>
+
+<h4>Bootstrap CSS und Hervorhebungen</h4>
+<p data-comment-id="u2zfg3nb">
+    Insekta bindet das
+    <a href="http://getbootstrap.com/">Bootstrap-CSS-Framework</a> ein, entsprechende CSS-Klassen können daher zur Formatierung genutzt werden. Zum besonderen
+    Hervorheben wird neben
+    <code>&lt;em&gt;</code> und
+    <code>&lt;strong&gt;</code> auch die
+    <code>alert</code>-Klasse vorgeschlagen. Dazu zwei Beispiele:
+</p>
+
+<p class="alert alert-info">
+    Eine besonders wichtige Information soll an diesem Beispiel verdeutlicht werden.
+</p>
+<p class="alert alert-warning">
+    Diese Hervorhebung eignet sich besonders gut, um auf häufige Fehler hinzuweisen.
+</p>
+
+<p data-comment-id="gdpfniho">Der dazugehörige Quelltext lautet:</p>
+{% call code(language='html') %}
+<p class="alert alert-info">
+    Eine besonders wichtige Information soll an diesem Beispiel hervorgehoben werden.
+</p>
+<p class="alert alert-warning">
+    Diese Hervorhebung dient besonders gut, um auf häufige Fehler hinzuweisen.
+</p>
+{% endcall %}
+
+<h4>Aufgaben</h4>
+
+<p data-comment-id="icjx2em5">
+    Jedes Szenario sollte mindestens eine Aufgabe enthalten. Dies ermöglicht dem Benutzer festzustellen, ob er das Szenario schonmal
+    bearbeitet hat. Im Zweifel reicht auch eine einfache "Aufgabe" mit einer Checkbox, die das Verstehen des Inhalts bestätigt.
+    Besser ist es jedoch, wenn möglichst viele kleine Aufgaben enthalten sind, die dem Leser zwischendurch zum Nachdenken
+    anregen.
+</p>
+
+
+<h3>Aufgaben</h3>
+
+<p data-comment-id="ake6lz45">
+    Insekta unterstützt integrierte Aufgaben, die vom Benutzer gelöst werden können und automatisiert geprüft werden. Dabei werden
+    Multiple-Choice-Aufgaben mit und ohne Mehrfachnennung unterstützt sowie Freitextantworten.
+</p>
+
+<h4>Multiple Choice ohne Mehrfachnennung</h4>
+
+<p data-comment-id="mcvbims5">
+    Multiple-Choice-Aufgaben ohne Mehrfachnennung werden intern als
+    <code>single_choice</code> bezeichnet. Folgender Quelltext fügt eine solche Aufgabe ein:
+</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call task(identifier='die_erde', type='single_choice', title='Astronomie')
+%}
+<p>Die Erde ist ...</p>
+{% call choice(name='flat') %}Eine Scheibe{% endcall %} {% call choice(name='sphere', correct=True) %}Eine Kugel{% endcall
+%} {% call choice(name='other') %}Etwas anderes{% endcall %} {% endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="ny4c5omu">
+    Jeder
+    <code>task</code>-Aufruf muss einen über das Szenario eindeutigen Identifier verfügen, der
+    <code>type</code>-Parameter wird auf
+    <code>single_choice</code> gesetzt. Optional kann noch der Parameter
+    <code>title</code> gesetzt werden, um der Aufgabe einen Titel zu geben.
+</p>
+<p data-comment-id="7gcq4rej">
+    Innerhalb des
+    <code>task</code>-Aufrufs kann wieder beliebiges HTML und Jinja-Code verwendet werden, um die Frage nach den eigenen Wünschen zu formatieren.
+    Um die Antwortmöglichkeiten zu spezifizieren, werden
+    <code>choice</code>-Aufrufe verwendet. Diese haben einen
+    <code>name</code>-Parameter, der eindeutig für die Frage sein muss und einen optionalen
+    <code>correct</code>-Parameter, der standardgemäß auf
+    <code>False</code> steht. Wenn die Antwortmöglichkeit als korrekt angenommen werden soll, muss
+    <code>correct</code> auf True gesetzt werden. Beim Typ
+    <code>single_choice</code> kann nur eine Antwortmöglichkeit als korrekt markiert werden.
+</p>
+
+<p data-comment-id="igk2almt">
+    Schauen wir uns das Ergebnis mal an:
+</p>
+
+{% call task(identifier='die_erde', type='single_choice', title='Astronomie') %}
+<p>Die Erde ist ...</p>
+{% call choice(name='flat') %}Eine Scheibe{% endcall %} {% call choice(name='sphere', correct=True) %}Eine Kugel{% endcall
+%} {% call choice(name='other') %}Etwas anderes{% endcall %} {% endcall %}
+
+<h4>Multiple Choice mit Mehrfachnennung</h4>
+<p data-comment-id="hwb6fn5e">
+    Um eine Mehrfachnennung zu ermöglichen wird der Typ das
+    <code>task</code>-Aufrufs auf
+    <code>multiple_choice</code> gesetzt. Auch der
+    <code>correct-Parameter</code> der
+    <code>choice-Aufrufe</code> darf nun bei mehreren Antwortmöglichkeiten auf
+    <code>True</code> gesetzt werden.
+</p>
+
+<p data-comment-id="w3c5klo4">Dazu wieder ein Beispiel: Folgender Code:</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call task(identifier='cookiemonster', type='multiple_choice') %}
+<p>Welche Aussagen treffen auf das Cookiemonster zu?</p>
+{% call choice(name='cookies', correct=True) %}Er mag Kekse{% endcall %} {% call choice(name='nocookies', correct=False)
+%}Er mag keine Kekse{% endcall %} {% call choice(name='morecookies', correct=True) %}Er möchte mehr Kekse{% endcall %} {%
+endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="galswquk">ergibt:</p>
+
+{% call task(identifier='cookiemonster', type='multiple_choice') %}
+<p>Welche Aussagen treffen auf das Cookiemonster zu?</p>
+{% call choice(name='cookies', correct=True) %}Er mag Kekse{% endcall %} {% call choice(name='nocookies', correct=False)
+%}Er mag keine Kekse{% endcall %} {% call choice(name='morecookies', correct=True) %}Er möchte mehr Kekse{% endcall %} {%
+endcall %}
+
+<h4>Freitextfelder</h4>
+<p data-comment-id="4qfrw7bl">
+    Als letzten Fragetyp gibt es noch Fragen mit Freitext. Zurzeit wird ein Freitextfeld für eine solche Frage unterstützt, ein
+    Lückentext mit mehreren Lücken ist daher leider nicht möglich. Der interne Name für diesen Typ lautet
+    <code>question.</code>. Am Besten eignet sich zum Verständnis wieder ein Beispiel:
+</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call task(identifier='hitchhiker', type='question') %}
+<p>Was gibt der Supercomputer "Deep Thought" auf
+    <em>die</em> Frage als Antwort?</p>
+{{ answer(expected='42') }} {% endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="za45ytdv">Ergebnis:</p>
+{% call task(identifier='hitchhiker', type='question') %}
+<p>Was gibt der Supercomputer "Deep Thought" auf
+    <em>die</em> Frage als Antwort?</p>
+{{ answer(expected='42') }} {% endcall %}
+
+<p data-comment-id="zrg4ebgn">
+    Das Antwortfeld und die gültige Antwort wird durch einen
+    <code>answer</code>-Aufruf gegeben. Bei obigen Beispiel ist
+    <code>{% raw %}{{ answer(expected='42') }}{% endraw %}</code> nur eine Kurzform von
+    <code>{% raw %}{% call answer(expected='42') %}{% endcall %}{% endraw %}</code>. Der
+    <code>expected</code>-Parameter definiert die zugelassene Antwort. Alternativ kann auch eine Liste von möglichen Antworten übergeben werden:
+</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% answer(expected=['42', 'zweiundvierzig', 'forty-two']) %} {% endraw %}
+{% endcall %}
+
+<p data-comment-id="a3b65a7c">
+    Daneben gibt es noch drei weitere Parameter:
+    <code>case_sensitive</code> gibt an, ob Groß- und Kleinschreibung beachtet werden soll (
+    <code>True</code>/
+    <code>False</code>), Standard ist
+    <code>True</code>. Der
+    <code>strip</code>-Parameter gibt an, ob Leerzeichen ab Anfang und Ende ignoriert werden sollen (auch ein Boolean, Standard:
+    <code>True</code>). Als letzten Parameter gibt es noch
+    <code>label</code>, ein String der den Text des Labels über dem Textfeld angibt.
+</p>
+
+<h4>Verdeckter Text</h4>
+<p data-comment-id="6ors3ljf">
+    Es gibt die Möglichkeit bestimmten Text nur anzeigen zu lassen, wenn eine gewisse Aufgabe bereits gelöst wurde. Dies kann
+    zum Beispiel dazu verwendet, um die Antwortmöglichkeiten einer Frage nach dem Lösen nochmal genauer zu erläutert. Der
+    dazu benötigte Aufruf heißt
+    <code>require_task</code> und hat einen Parameter
+    <code>identifier</code>, der den Identifier der dazugehörigen Aufgabe (
+    <code>task</code>-Aufruf) enthält.
+</p>
+
+<p data-comment-id="7xyjevk3">Dazu ein Beispiel:</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call task(identifier='scientist', type='single_choice') %}
+<p>Welcher Wissenschaftler war Biologe?</p>
+{% call choice(name='gauss') %}Carl Friedrich Gauß{% endcall %} {% call choice(name='curie') %}Marie Curie{% endcall %} {%
+call choice(name='darwin', correct=True) %}Charles Darwin{% endcall %} {% endcall %} {% call require_task(identifier='scientist')
+%}
+<p>
+    Carl Friedrich Gauß war Mathematiker, Marie Curie beschäftigte sich mit Physik und Chemie. Wie richtig angegeben ist Charles
+    Darwin Biologe. Er ist für seine Evolutionstheorie bekannt. Dieser Absatz wurde aufgedeckt, weil du die Frage mit dem
+    Identifier
+    <code>scientist</code> gelöst hast.
+</p>
+{% endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="goyp5thx">Ergebnis:</p>
+
+{% call task(identifier='scientist', type='single_choice') %}
+<p>Welcher Wissenschaftler war Biologe?</p>
+{% call choice(name='gauss') %}Carl Friedrich Gauß{% endcall %} {% call choice(name='curie') %}Marie Curie{% endcall %} {%
+call choice(name='darwin', correct=True) %}Charles Darwin{% endcall %} {% endcall %} {% call require_task(identifier='scientist')
+%}
+<p>
+    Carl Friedrich Gauß war Mathematiker, Marie Curie beschäftigte sich mit Physik und Chemie. Wie richtig angegeben ist Charles
+    Darwin Biologe. Er ist für seine Evolutionstheorie bekannt. Dieser Absatz wurde aufgedeckt, weil du die Frage mit dem
+    Identifier
+    <code>scientist</code> gelöst hast.
+</p>
+{% endcall %}
+
+<p data-comment-id="l2txd3n7">
+    Noch eine Anmerkung zum
+    <code>require_task</code>-Aufruf: Der
+    <code>task</code>-Aufruf und der
+    <code>require_task</code>-Aufruf müssen nicht nacheinander folgenden, sie sind völlig unabhängig voneinander. Einzig wichtig ist, dass der Identifier
+    übereinstimmt. Es kann auch mehrere
+    <code>require_task</code>-Aufrufe geben, die sich auf den gleichen Identifier beziehen.
+</p>
+
+<h4>Hinweise</h4>
+
+<p data-comment-id="etjqawrp">
+    Um bei Aufgaben Hilfestellungen zu geben, kann der
+    <code>hint</code>-Aufruf verwendet werden. Dieser erzeugt einen Button, der beim Betätigen den Hinweis anzeigt:
+</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call hint() %}
+<p>Den Beweis kann man über eine strukturelle Induktion führen.</p>{% endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="4cs63n7i">Das Ergebnis sieht wie folgt aus:</p>
+
+{% call hint() %}
+<p>Den Beweis kann man über eine strukturelle Induktion führen.</p>{% endcall %}
+
+
+<h3>Mathe-Schriftsatz mit MathJax</h3>
+<p data-comment-id="5j5kfpra">
+    Im Szenario kann ganz normal MathJax verwendet werden, allerdings nur mit den \(\LaTeX\)-Delimitern, also
+    <span class="tex2jax_ignore">\( ... \)</span> für Inline-Umgebungen und
+    <span class="tex2jax_ignore">\[ ... \]</span> für Block-Umgebungen. Dazu wieder ein Beispiel:
+</p>
+
+{% call code(language='html') %}
+<p>
+    Der kleine Satz von Fermat kann für \( a \neq 0 \) in die folgende Form gebracht werden: \[ a^{p-1} = 1 \pmod p \]
+</p>
+{% endcall %}
+
+<p>
+    Der kleine Satz von Fermat kann für \( a \neq 0 \) in die folgende Form gebracht werden: \[ a^{p-1} = 1 \pmod p \]
+</p>
+
+<p data-comment-id="d7ft25zi">
+    Sollte in einem Bereich kein MathJax-Rendering erwünscht sein, so kann die CSS-Klasse
+    <code>tex2jax_ignore</code> hinzugefügt werden.
+</p>
+
+
+<h3>Statische Dateien und Einbinden von Bildern</h3>
+<p data-comment-id="py5bbezw">
+    Mit einem
+    <code>media</code>-Aufruf können statische Dateien aus dem
+    <code>static</code>-Verzeichnis des Szenarios referenziert werden. Darüber können also Downloads bereitsgestellt werden oder Bilder eingebunden
+    werden.
+</p>
+
+{% call code(language='html+jinja') %} {% raw %}
+<p>
+    <img src="{{ media('insekta.png') }}" alt="Insekta-Logo" title="Insekta-Logo">
+</p>
+{% endraw %} {% endcall %}
+
+<p data-comment-id="ittpocim">bindet das folgende Bild ein:</p>
+
+<p>
+    <img src="{{ media('insekta.png') }}" alt="Insekta-Logo" title="Insekta-Logo">
+</p>
+
+<h3>Quelltexte und Syntax-Highlighting</h3>
+
+<p data-comment-id="syjzawj5">
+    Zum Hervorheben kann der
+    <code>code</code>-Aufruf verwendet werden. Über den Parameter
+    <code>language</code> stellt man den Lexer für das Syntax-Highlighting ein. Eine
+    <a href="http://pygments.org/docs/lexers/">
+        Liste der verfügbaren Lexer</a> findet sich in der
+    <a href="http://pygments.org/">Pygments</a>-Dokumentation (siehe "short names"). Nun aber erstmal ein einfaches Beispiel:
+</p>
+
+{% call code(language='html+jinja') %} {% raw %} {% call code(language='python') %} def fib(n): a, b = 0, 1 while n > 0:
+a, b = b, a + b n -= 1 return a {% endcall %} {% endraw %} {% endcall %}
+
+<p data-comment-id="eqzjvowl">Der hervorgehobe Python-Quelltext sieht dann wie folgt aus:</p>
+
+{% call code(language='python') %} def fib(n): a, b = 0, 1 while n > 0: a, b = b, a + b n -= 1 return a {% endcall %}
+
+<p data-comment-id="ynj44iy7">
+    Mit dem Parameter
+    <code>linenos</code> (Boolean, Standard:
+    <code>True</code>) kann die Zeilennummerierung ein- und ausgeschaltet werden.
+</p>
+
+<p data-comment-id="zqombegt">
+    Eine andere Möglichkeit zum Einbinden von Quelltext ist das Einbinden aus einer Datei. Dazu wird beim
+    <code>code</code>-Aufruf der Parameter
+    <code>filename</code> angegeben. Zusätzlich dazu kann mit den Parametern
+    <code>linestart</code> und
+    <code>lineend</code> noch spezifiziert werden, welche Zeilen der Datei angezeigt werden.
+</p>
+
+<p data-comment-id="ebzhkakq">
+    Die ersten zwei Zeilen der
+    <code>meta.json</code> werden wie folgt angezeigt:
+</p>
+{% call code(language='html+jinja') %} {% raw %} {{ code(filename='meta.json', language='json', linestart=1, lineend=2) }}
+{% endraw %} {% endcall %}
+
+<p data-comment-id="vqerutu2">Sie sind:</p>
+{{ code(filename='meta.json', language='json', linestart=1, lineend=2) }}
+
+
+<h3>Einbinden von JavaScript und CSS</h3>
+<p data-comment-id="ar66ptgv">
+    Das Einbinden von JavaScript und CSS läuft nicht über die
+    <code>scenario.html</code>, sondern übere die
+    <code>meta.json</code>. Das sieht dann wie folgt aus:
+</p>
+
+{% call code(language='json') %} { "static": { "css": ["example.css"], "js": [["blockcipher", "prp.js"], "paddingoracle.js"]
+}, } {% endcall %}
+
+<p data-comment-id="fccdzqnf">
+    Dabei liegt die
+    <code>example.css</code> im
+    <code>static</code>-Verzeichnis dieses Szenarios, genauso wie die
+    <code>paddingoracle.js</code>. Die
+    <code>prp.js</code> liegt im
+    <code>static</code>-Verzeichnis des Szenarios &quot;blockcipher&quot;. Die JavaScript-Dateien werden am Ende der Seite im
+    <code>&lt;body&gt;</code> eingebunden, es stehen
+    <a href="http://jquery.com/">jQuery</a> und
+    <a href="http://getbootstrap.com/javascript/">
+        Bootstrap JavaScript</a> zur Verfügung.
+</p>
+
+<h3>Virtuelle Maschinen</h3>
+<p data-comment-id="tu2vox3h">
+    Optional können in einem Szenario auch virtuelle Maschinen angesprochen werden. Dabei wird in der
+    <code>meta.json</code> der Schlüssel
+    <code>vm_resource</code> auf den Namen der Resource gesetzt. Diese Resource muss vorher im Insekta-VM-System konfiguriert werden, entsprechende
+    Dokumentation dazu folgt noch.
+</p>
+<p data-comment-id="xvte2zne">
+    Mit virtuellen Maschinen steht auch das
+    <code>vm_ip</code>-Aufruf zur Verfügung, er trägt die IP der entsprechenden virtuellen Maschine an die Stelle ein, wo er eingebunden wird.
+    Dabei muss der Name der virtuellen Maschine spezifizifiert werden (eine Resource kann mehrere virtuelle Maschinen haben):
+</p>
+{% call code(language='html+jinja') %} {% raw %}
+<a href="http://{{ vm_ip('main') }}">Webseite auf der VM</a>
+{% endraw %} {% endcall %}
+<p data-comment-id="bubfrxfv">
+    Sollte die virtuelle Maschine nicht gestartet sein, so wird erstmal ein Platzhalter ($IP) eingesetzt.
+</p>
+
+<p data-comment-id="zbiuf73w">
+    Mit der Variable
+    <code>vpn_ip</code> kann außerdem die IP des Benutzers im VPN abgefragt werden:
+</p>
+{% call code(language='html+jinja') %} {% raw %}
+<p>Deine IP im VPN ist {{ vpn_ip }}</p>
+{% endraw %} {% endcall %}
+
+<p data-comment-id="tiqzqqqr">
+    Als letztes steht noch das Dictionary
+    <code>vms</code> als Variable zur Verfügung, das alle virtuellen Maschinen, die gestartet sind, enthält. Dies kannst du zum Beispiel
+    nutzen, um zu Testen, ob die virtuellen Maschinen gestartet wurden:
+</p>
+{% call code(language='html+jinja') %} {% raw %} {% if vms %}
+<p>Deine virtuelle Maschine wurde gestartet, durch erreichst sie unter {{ vm_ip('main') }}.</p>
+{% else %}
+<p>Bitte starte die virtuellen Maschinen, um die folgende Aufgabe zu lösen.</p>
+{% endif %} {% endraw %} {% endcall %}
+
+
+<h3>Schlusswort</h3>
+<p data-comment-id="cywyhz3p">
+    Du hast hoffentlich nun einen guten Überblick, wie ein Szenario gestaltet werden kann. Gerne kannst du dir auch den Quelltext
+    dieses Szenarios anschauen. Viel Spaß beim Erstellen von Szenarien!
+</p>

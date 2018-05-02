@@ -143,6 +143,8 @@ Check if virtual machine is started:
         {% endif %}
     {% endcall %}
 
+A whole example of a 'scenario.html' is available :download:`here <example.html>`.
+
 metadata.json
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
