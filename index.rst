@@ -10,6 +10,7 @@ Welcome to Insekta's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   insekta-setup/index
    insekta-web/index
    insekta-vm/index
 
