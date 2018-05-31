@@ -73,6 +73,41 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. Enable the systemd service for openvpn via ``systemctl enable openvpn-server@server``.
 
 
+Setting up the CA
+"""""""""""""""""
+#. Enter ``/usr/share/easy-rsa``, invoke ``make-cadir cadir`` and enter the created ``cadir`` directory via ``cd /usr/share/easy-rsa; make-cadir cadir; cd cadir``.
+#. Adjust the certificate fields in file ``vars``, e.g., via ``vim /usr/share/easy-rsa/cadir/vars``. The fields that need to be adjusted can be found at the bottom of the file and a sample configuration might look as follows:
+    ::
+      
+        # These are the default values for fields
+        # which will be placed in the certificate.
+        # Don't leave any of these fields blank.
+        export KEY_COUNTRY="DE"
+        export KEY_PROVINCE="Bayern"
+        export KEY_CITY="Bamberg"
+        export KEY_ORG="PSI"
+        export KEY_EMAIL="services.psi@uni-bamberg.de"
+        export KEY_OU="Insekta"
+      
+#. Create a symlink to openssl via ``ln -s openssl-1.0.0.cnf openssl.cnf``.
+#. Source the ``vars`` file via ``source ./vars``.
+#. Run ``./clean-all``.
+#. Run ``./build-ca``. Note that this will ask you to confirm the previously configured certificate fields by pressing enter.
+#. Run ``./build-key-server server``. This might take some time for generating the key pair. It will also ask you again to confirm the previously configured certificate fields. In addition, enter ``y`` for signing, ``y`` for committing, and ``n`` for not challenging.
+#. Copy the generated certificate files to ``/etc/openvpn/server/`` via:
+    ::
+
+      cp keys/ca.crt /etc/openvpn/server/
+      cp keys/ca.key /etc/openvpn/server/
+      cp keys/server.crt /etc/openvpn/server/
+      cp keys/server.key /etc/openvpn/server/
+
+#. **TODO:** we need this for setting up insekta-web later on ``cp /etc/openvpn/server/ca.* /path/to/insekta-web/insekta/testenv/vpn/``
+#. Finally, start the systemd service for openvpn via ``systemctl start openvpn-server@server``.
+#. **TODO:** Not sure whether the previous command will run without errors so far.
+#. **TODO:** Fix spacing between items.
+
+
 Setting up the insekta-vm component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **TODO**
