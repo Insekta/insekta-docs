@@ -45,6 +45,35 @@ Setting up libvirt on the insekta host
 
 #. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
-#. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images``. This image is used to create the Debian virtual machine running all Insekta components.
 #. **TODO:** setup a network bridge by modifying the file ``/etc/network/interfaces``.
 #. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
+#. TODO: storage pool.
+
+
+Setting up the insekta libvirt image
+------------------------------------
+#. Install ``virt-manager`` on your local machine, e.g., by running ``apt install virt-manager`` on Debian.
+#. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images``.
+#. Setup a new Debian virtual machine using the ``virt-manager`` wizard. Make sure to check ``customize configuration before install`` to enable UEFI firmware and i440FX chipest. You most likely want to turn on ``start vm on host boot`` as well.
+#. Perform a normal Debian installation as done before and generate a new SSH key pair using ``ssh-keygen``.
+#. Setup SSH remote access as shown before such that you can connect from insekta host to the new insekta libvirtd image.
+#. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` and connect to it via SSH.
+
+
+Setting up openvpn
+^^^^^^^^^^^^^^^^^^
+**TODO**
+
+
+Setting up the insekta-vm component
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**TODO**
+
+
+Setting up the insekta-web component
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**TODO**
+
+
+
+
