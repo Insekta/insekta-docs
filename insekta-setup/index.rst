@@ -53,16 +53,24 @@ Setting up libvirt on the insekta host
 Setting up the insekta libvirt image
 ------------------------------------
 #. Install ``virt-manager`` on your local machine, e.g., by running ``apt install virt-manager`` on Debian.
-#. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images``.
-#. Setup a new Debian virtual machine using the ``virt-manager`` wizard. Make sure to check ``customize configuration before install`` to enable UEFI firmware and i440FX chipest. You most likely want to turn on ``start vm on host boot`` as well.
-#. Perform a normal Debian installation as done before and generate a new SSH key pair using ``ssh-keygen``.
-#. Setup SSH remote access as shown before such that you can connect from insekta host to the new insekta libvirtd image.
-#. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` and connect to it via SSH.
+#. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images`` on the insekta host.
+#. Setup a new Debian virtual machine using the wizard provided by ``virt-manager``. Make sure to check ``customize configuration before install`` to enable UEFI firmware and the i440FX chipest. You most likely want to turn on ``start vm on host boot`` as well.
+#. Perform a normal Debian installation as done before.
+#. Generate a new SSH key pair on the insekta host using ``ssh-keygen`` and setup SSH remote access as shown before such that you can connect from insekta host to the new insekta libvirtd image.
+#. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` on this machine and connect to it from insekta host via SSH.
 
 
 Setting up openvpn
 ^^^^^^^^^^^^^^^^^^
-**TODO**
+Note that the following steps must be performed on the insekta libvirt image.
+
+#. Install the following dependencies via ``apt install build-essential libvirt-dev qemu-kvm git virtualenv python-libvirt python3-libvirt python3 python3-dev python-dev pkg-config openvpn iptables python3-pip``.
+#. Clone the ``insekta-vm`` repository to ``/opt`` and enter it via ``cd /opt/; git clone https://github.com/Insekta/insekta-vm.git; cd insekta-vm``.
+#. Copy the openvpn directory from ``insekta-vm/insektavm/examples/openvpn/`` to ``/etc/openvpn`` via ``cp -r /opt/insekta-vm/insektavm/examples/openvpn/* /etc/openvpn``.
+#. **TODO:** fix in GIT repository: ``chmod +x insekta-vm/insektavm/examples/openvpn/learn-address.sh``.
+#. Create a system account for openvpn via ``useradd --system openvpn``.
+#. Change the file ownership of ``/etc/openvpn`` to ``openvpn`` via ``chown -R openvpn /etc/openvpn``.
+#. Enable the systemd service for openvpn via ``systemctl enable openvpn-server@server``.
 
 
 Setting up the insekta-vm component
