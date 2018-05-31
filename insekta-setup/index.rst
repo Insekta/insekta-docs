@@ -47,7 +47,22 @@ Setting up libvirt on the insekta host
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
 #. **TODO:** setup a network bridge by modifying the file ``/etc/network/interfaces``.
 #. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
-#. TODO: storage pool.
+#. The next step is to setup a new storage pool called ``insekta``, which is used later on to store VM images. This can either be achieved via ``virt-manager`` or by running the following commands on the insekta host:
+
+    #. ``virsh pool-define-as insekta dir - - - - "/var/lib/libvirt/images/insekta/"``.
+    #. ``virsh pool-build insekta``.
+    #. ``virsh pool-start insekta``.
+    #. ``virsh pool-autostart insekta``.
+
+#. Upon running ``virsh pool-list --details`` you should see an output similar to the one below:
+    ::
+      
+         Name     State    Autostart  Persistent    Capacity  Allocation   Available
+        -----------------------------------------------------------------------------
+         default  running  yes        yes         436.67 GiB    1.90 GiB  434.77 GiB
+         insekta  running  yes        yes         436.67 GiB    1.90 GiB  434.77 GiB
+
+
 
 
 Setting up the insekta libvirt image
@@ -58,6 +73,7 @@ Setting up the insekta libvirt image
 #. Perform a normal Debian installation as done before.
 #. Generate a new SSH key pair on the insekta host using ``ssh-keygen`` and setup SSH remote access as shown before such that you can connect from insekta host to the new insekta libvirtd image.
 #. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` on this machine and connect to it from insekta host via SSH.
+#. **TODO**: I think we have to switch to Debian Unstable (sid).
 
 
 Setting up openvpn
@@ -88,7 +104,7 @@ Setting up the CA
         export KEY_ORG="PSI"
         export KEY_EMAIL="services.psi@uni-bamberg.de"
         export KEY_OU="Insekta"
-      
+
 #. Create a symlink to openssl via ``ln -s openssl-1.0.0.cnf openssl.cnf``.
 #. Source the ``vars`` file via ``source ./vars``.
 #. Run ``./clean-all``.
@@ -105,7 +121,6 @@ Setting up the CA
 #. **TODO:** we need this for setting up insekta-web later on ``cp /etc/openvpn/server/ca.* /path/to/insekta-web/insekta/testenv/vpn/``
 #. Finally, start the systemd service for openvpn via ``systemctl start openvpn-server@server``.
 #. **TODO:** Not sure whether the previous command will run without errors so far.
-#. **TODO:** Fix spacing between items.
 
 
 Setting up the insekta-vm component
