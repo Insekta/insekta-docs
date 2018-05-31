@@ -40,3 +40,11 @@ Setting up remote SSH access
 #. In case that you do not use the default SSH key location, make sure to adapt your SSH config within file ``~/.ssh/config``.
 
 
+Setting up libvirt on the insekta host
+-------------------------------------
+
+#. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
+#. Install OVMF for UEFI image support via ``apt install ovmf``.
+#. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images``. This image is used to create the Debian virtual machine running all Insekta components.
+#. **TODO:** setup a network bridge by modifying the file ``/etc/network/interfaces``.
+#. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
