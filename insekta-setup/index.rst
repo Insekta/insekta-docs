@@ -143,7 +143,7 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. Copy the systemd service file and adapt the paths if necessary via ``cp /opt/insekta-vm/insektavm/examples/systemd/insekta-vm.service /etc/systemd/system/``.
 #. Create a system account for insekta via ``useradd --system insekta``.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-vm``.
-#. Enable the service via ``systemctl enable insekta-vm.service`` and start it via via ``systemctl start insekta-vm.service``.
+#. Enable the service via ``systemctl enable insekta-vm.service`` and start it via ``systemctl start insekta-vm.service``.
 #. Setup ``nginx`` as a reverse proxy:
 
     #. Install dependencies via ``apt install nginx``.
@@ -164,8 +164,26 @@ Note that the following steps must be performed on the insekta libvirt image.
 
 Setting up the insekta-web component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-**TODO**
+#. Install dependencies via ``apt install git wget python3 python3-pip unzip gettext curl sudo``.
+#. Install nodejs as npm via ``curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -`` and ``apt install -y nodejs``.
+#. If not already done before, install pipenv via ``pip3 install pipenv``.
+#. Clone the repository via ``cd /opt/; git clone https://github.com/Insekta/insekta-web.git; cd insekta-web``.
+#. Use the provided example configuration file via ``cp ./insekta/insekta/settings.py.example ./insekta/insekta/settings.py`` and adapt it if necessary.
+#. Setup the virtualenv environment:
 
+    #. Create a new virtual environment ``python3 -m venv /opt/insekta-web/insekta/venv``.
+    #. Spawn the virtualenv shell via ``source /opt/insekta-web/insekta/venv/bin/activate``.
+    #. Install dependencies via ``pipenv install``.
+    #. We also need ``gunicorn`` for serving this application. To install run ``pip install gunicorn``.
+    #. Invoke ``deactivate`` to leave the virtualenv shell.
+
+#. Use the provided systemd service file and adapt the paths if necessary.
+#. **TODO**: provide this file.
+#. If not already done before, create a system account for insekta via ``useradd --system insekta``.
+#. Adapt the rights via ``chown -c insekta /opt/insekta-web``.
+#. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
+#. **TODO**: similar as above .. NGINX stuff .. adapt settings there, etc.
+#. Finally, query the service to check whether it is up and runnning, e.g., using ``wget -O- 127.0.0.1:8105/admin | vim -``.
 
 
 
