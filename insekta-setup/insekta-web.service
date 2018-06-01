@@ -1,0 +1,16 @@
+[Unit]
+Description=insekta-web
+After=network.target
+
+[Service]
+User=insekta
+Group=insekta
+WorkingDirectory=/opt/insekta-web/insekta
+Environment=VIRTUAL_ENV="/opt/insekta-web/insekta/venv"
+Environment=PATH="/opt/insekta-web/insekta/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/opt/insekta-web/insekta/venv/bin/gunicorn -w 2 -t 120 -b 127.0.0.1:8105 --error-logfile /opt/insekta-web/error.log insekta.wsgi:application
+PrivateTmp=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

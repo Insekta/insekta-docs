@@ -123,12 +123,22 @@ Setting up the CA
 #. **TODO:** Not sure whether the previous command will run without errors so far.
 
 
+Setting up NGINX as a reverse proxy
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NGINX is used as a reverse proxy to map the requests to the respective services. Note that the following steps must be performed on the insekta libvirt image.
+
+#. Install dependencies via ``apt install nginx``.
+#. Start the service via ``service nginx start``.
+#. Copy the example nginx configuration file from the repository to ``/etc/nginx/sites-available`` and adapt  if necessary. You will most likely have to adjust the ``server_name`` field.
+#. Create a symlink in ``/etc/nginx/sites-enabled`` that points to the file in ``/etc/nginx/sites-available`` via ``ln -s /etc/nginx/sites-available/filename /etc/nginx/sites-enabled/filename``.
+#. You might have to remove the ``default`` symlink in ``/etc/nginx/sites-enabled``.
+#. Restart nginx via ``service nginx restart`` such that the modified configuration is applied.
+
+
 Setting up the insekta-vm component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Note that the following steps must be performed on the insekta libvirt image.
 
-#. **TODO**: Adapt the paths in the insekta-vm/insektavm/examples/systemd folder from ``/home/`` to ``/opt/``
-#. **TODO**: Provide sample nginx configs in GIT.
 #. Install pipenv via ``pip3 install pipenv``.
 #. Use the provided example settings file: ``cp insektavm/insektavm/settings.py.example insektavm/insektavm/settings.py``
 #. Run ``apt install python3-venv``.
@@ -144,46 +154,62 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. Create a system account for insekta via ``useradd --system insekta``.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-vm``.
 #. Enable the service via ``systemctl enable insekta-vm.service`` and start it via ``systemctl start insekta-vm.service``.
-#. Setup ``nginx`` as a reverse proxy:
-
-    #. Install dependencies via ``apt install nginx``.
-    #. Start the service via ``service nginx start``.
-    #. Copy the example nginx configuration file from the repository to ``/etc/nginx/sites-available/insekta-vm`` and adapt the file if necessary.
-    #. **TODO**: provide the sample files for the previous step.
-    #. Create a symlink ``insekta-vm`` in ``/etc/nginx/sites-enabled`` that points to the ``/etc/nginx/sites-available/insekta-vm``
-    #. Run ``service nginx restart`` such that the modified configuration is applied.
-
-#. **TODO**: generate static files and adjust the path in the ``settings.py``.
-#. **TODO**: use dehydrated to generate and sign SSL certificates. However, this has some requirements.
+#. Setup ``nginx`` as a reverse proxy (see the instructions above).
 #. **TODO**: insekta libvirt image must have access to the host machine for the following step.
 #. **TODO**: adapt the settings -> libvirtd_nodes (``qemu+ssh ..`` ) & ``VM_IMAGE_DIR``.
 #. **TODO**: also allowed_hosts in ``settings.py``.
 #. **TODO**: ``insekta-vm/insektavm/insektavm/settings.py:VM_IMAGE_DIR = '/opt/vm-import'`` .. ``mkdir /opt/vm-import`` .. probably also ``chown``.
-#. Finally, query the service to check whether it is up and runnning, e.g., using ``wget -O- 127.0.0.1:8106/admin | vim -``.
 
 
 Setting up the insekta-web component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#. Install dependencies via ``apt install git wget python3 python3-pip unzip gettext curl sudo``.
+Note that the following steps must be performed on the insekta libvirt image.
+
+#. Install dependencies via ``apt install git make wget python3 python3-pip unzip gettext curl sudo python3-venv``.
 #. Install nodejs as npm via ``curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -`` and ``apt install -y nodejs``.
 #. If not already done before, install pipenv via ``pip3 install pipenv``.
 #. Clone the repository via ``cd /opt/; git clone https://github.com/Insekta/insekta-web.git; cd insekta-web``.
-#. Use the provided example configuration file via ``cp ./insekta/insekta/settings.py.example ./insekta/insekta/settings.py`` and adapt it if necessary.
-#. Setup the virtualenv environment:
+#. Use the provided example configuration file via ``cp /opt/insekta-web/insekta/insekta/settings.py.example /opt/insekta-web/insekta/insekta/settings.py`` and adapt it.
+    ::
+      
+        # domain names or IP address allowed to access this service. Use the machine's IP or the respective domain name.
+        ALLOWED_HOSTS = ['420.420.420.420']
+        # location where static files are located
+        STATIC_ROOT = "/opt/insekta-static/insekta-web/static-root"
+        # location where media files are located
+        MEDIA_ROOT = "/opt/insekta-static/insekta-web/media-root" 
+        # the IP and port of the VPN server
+        VPN_SERVER = {'host': 'localhost', 'port': 1194}
+        # the URI where the insekta-vm API can be found
+        REMOTE_API_URL = 'http://localhost:8001/api/'
+        # authentication for the insekta-vm API
+        REMOTE_API_AUTH = ('api', 'mypassword')
+        # code required to register a new insekta account at insekta-web
+        INVITATION_CODE = 'supergeheim'
+
+#. Setup the virtualenv environment and generate static files:
 
     #. Create a new virtual environment ``python3 -m venv /opt/insekta-web/insekta/venv``.
     #. Spawn the virtualenv shell via ``source /opt/insekta-web/insekta/venv/bin/activate``.
     #. Install dependencies via ``pipenv install``.
     #. We also need ``gunicorn`` for serving this application. To install run ``pip install gunicorn``.
+    #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make all``.
+    #. Collect and copy the static files to the previously defined location via ``cd /opt/insekta-web/insekta; python manage.py collectstatic``.
     #. Invoke ``deactivate`` to leave the virtualenv shell.
+    
+#. Setup and configure NGINX as a reverse proxy:
 
-#. Use the provided systemd service file and adapt the paths if necessary.
-#. **TODO**: provide this file.
+    #. Install dependencies via ``apt install nginx``.
+    #. Start the service via ``service nginx start``.
+    #. Copy the example nginx configuration file from the repository to ``/etc/nginx/sites-available/insekta-web`` and adapt  if necessary. You will most likely have to adjust the ``server_name`` field.
+    #. Create a symlink ``insekta-web`` in ``/etc/nginx/sites-enabled`` that points to the ``/etc/nginx/sites-available/insekta-web`` via ``ln -s /etc/nginx/sites-available/insekta-web /etc/nginx/sites-enabled/insekta-web``.
+    #. You might have to remove the ``default`` symlink in ``/etc/nginx/sites-enabled``.
+    #. Restart nginx via ``service nginx restart`` such that the modified configuration is applied.
+
 #. If not already done before, create a system account for insekta via ``useradd --system insekta``.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-web``.
+#. Use the provided systemd service file and adapt if necessary.
 #. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
-#. **TODO**: similar as above .. NGINX stuff .. adapt settings there, etc.
-#. Finally, query the service to check whether it is up and runnning, e.g., using ``wget -O- 127.0.0.1:8105/admin | vim -``.
 
 
 
