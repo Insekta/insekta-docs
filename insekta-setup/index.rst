@@ -132,7 +132,7 @@ NGINX is used as a reverse proxy to map the requests to the respective services.
 #. Copy the example nginx configuration file from the repository to ``/etc/nginx/sites-available`` and adapt  if necessary. You will most likely have to adjust the ``server_name`` field.
 #. Create a symlink in ``/etc/nginx/sites-enabled`` that points to the file in ``/etc/nginx/sites-available`` via ``ln -s /etc/nginx/sites-available/filename /etc/nginx/sites-enabled/filename``.
 #. You might have to remove the ``default`` symlink in ``/etc/nginx/sites-enabled``.
-#. Restart nginx via ``service nginx restart`` such that the modified configuration is applied.
+#. Restart nginx via ``service nginx reload`` such that the modified configuration is applied.
 
 
 Setting up the insekta-vm component
@@ -192,24 +192,15 @@ Note that the following steps must be performed on the insekta libvirt image.
     #. Create a new virtual environment ``python3 -m venv /opt/insekta-web/insekta/venv``.
     #. Spawn the virtualenv shell via ``source /opt/insekta-web/insekta/venv/bin/activate``.
     #. Install dependencies via ``pipenv install``.
-    #. We also need ``gunicorn`` for serving this application. To install run ``pip install gunicorn``.
-    #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make all``.
+    #. We also need ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
+    #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
     #. Collect and copy the static files to the previously defined location via ``cd /opt/insekta-web/insekta; python manage.py collectstatic``.
     #. Invoke ``deactivate`` to leave the virtualenv shell.
     
-#. Setup and configure NGINX as a reverse proxy:
-
-    #. Install dependencies via ``apt install nginx``.
-    #. Start the service via ``service nginx start``.
-    #. Copy the example nginx configuration file from the repository to ``/etc/nginx/sites-available/insekta-web`` and adapt  if necessary. You will most likely have to adjust the ``server_name`` field.
-    #. Create a symlink ``insekta-web`` in ``/etc/nginx/sites-enabled`` that points to the ``/etc/nginx/sites-available/insekta-web`` via ``ln -s /etc/nginx/sites-available/insekta-web /etc/nginx/sites-enabled/insekta-web``.
-    #. You might have to remove the ``default`` symlink in ``/etc/nginx/sites-enabled``.
-    #. Restart nginx via ``service nginx restart`` such that the modified configuration is applied.
-
+#. Setup ``nginx`` as a reverse proxy (see the instructions above).
 #. If not already done before, create a system account for insekta via ``useradd --system insekta``.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-web``.
-#. Use the provided systemd service file and adapt if necessary.
+#. Copy the provided systemd service file to ``/etc/systemd/system`` and adapt it if necessary.
 #. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
-
 
 
