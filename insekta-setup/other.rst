@@ -33,6 +33,12 @@ Gain access to the virtual machine via virsh console
 #. Connect to the guest VM via ``virsh console name-of-your-vm``.
 
 
+Setting up routing information
+------------------------------
+#. **TODO**: This is still an open issue!
+#. Debug note: Try to ``ping`` the target host from some other machine and run ``tcpdump -a icmp`` on the target host. Then keep on adjusting the routes until the ``ping`` is received.
+
+
 Network Bridge Definition
 -------------------------
 #. **TODO**: This does not work yet!
