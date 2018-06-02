@@ -204,6 +204,7 @@ Note that the following steps must be performed on the insekta libvirt image.
     #. Install dependencies via ``pipenv install``.
     #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
     #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
+    #. **TODO**: There is a bug which causes ``bootstrap.css`` to be empty. Installing ``sass`` globally via ``npm install -g sass`` and invoking ``make clean; make`` seems to solve the problem.
     #. Build the initial environment for the scenarios via``cd /opt/insekta-web/insekta; make testenv``.
     #. **TODO**: What about openvpn in the context of ``make testenv``? The Makefile also generates certs.
     #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
