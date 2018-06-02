@@ -11,6 +11,7 @@ Welcome to Insekta's documentation!
    :caption: Contents:
 
    insekta-setup/index
+   insekta-setup/other
    insekta-web/index
    insekta-vm/index
 
