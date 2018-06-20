@@ -7,6 +7,7 @@ Further TODOs
 #. **TODO**: iptables needs to be set up in order to forward traffic from vpn to libvirt. An example configuration can be found in the examples directory. This can be placed in ``/etc/network/if-up.d``.
 #. **TODO**: Additionally, the following command needs to be ran once: ``sysctl -w net.ipv4.ip_forward=1``.
 #. **TODO**: Setting up a network bridge for ?.
+#. **TODO**: Setup the routing information at openVPN and libvirt.
 
 
 Gain access to the virtual machine via virsh console

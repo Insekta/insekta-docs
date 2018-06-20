@@ -45,7 +45,7 @@ Setting up libvirt on the insekta host
 
 #. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
-#. **TODO**: setup a network bridge by modifying the file ``/etc/network/interfaces``.
+#. **TODO**: setup a network bridge by modifying the file ``/etc/network/interfaces``. (Note: look this up in the old Insekta docs)
 #. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
 #. The next step is to setup a new storage pool called ``insekta``, which is used later on to store VM images. This can either be achieved via ``virt-manager`` or by running the following commands on the insekta host:
 
@@ -109,15 +109,14 @@ Setting up the CA
 #. Run ``./clean-all``.
 #. Run ``./build-ca``. Note that this will ask you to confirm the previously configured certificate fields by pressing enter.
 #. Run ``./build-key-server server``. This might take some time for generating the key pair. It will also ask you again to confirm the previously configured certificate fields. In addition, enter ``y`` for signing, ``y`` for committing, and ``n`` for not challenging.
-#. Copy the generated certificate files to ``/etc/openvpn/server/`` via:
+#. Copy the generated certificates and the server key to ``/etc/openvpn/server/`` via:
     ::
 
       cp keys/ca.crt /etc/openvpn/server/
-      cp keys/ca.key /etc/openvpn/server/
       cp keys/server.crt /etc/openvpn/server/
       cp keys/server.key /etc/openvpn/server/
 
-#. **TODO**: we need this for setting up insekta-web later on ``cp /etc/openvpn/server/ca.* /path/to/insekta-web/insekta/testenv/vpn/``, but not sure about this.
+#. Copy the certificate and the key of the ca to insekta-web, i.e., by running ``cp /etc/openvpn/server/ca.* /path/to/insekta-web/insekta/testenv/vpn/``.
 #. Finally, start the systemd service for openvpn via ``systemctl start openvpn-server@server``.
 
 
@@ -204,7 +203,7 @@ Note that the following steps must be performed on the insekta libvirt image.
     #. Install dependencies via ``pipenv install``.
     #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
     #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
-    #. **TODO**: There is a bug which causes ``bootstrap.css`` to be empty. Installing ``sass`` globally via ``npm install -g sass`` and invoking ``make clean; make`` seems to solve the problem.
+    #. **TODO**: There is a bug which causes ``bootstrap.css`` to be empty. Installing ``sass`` globally via ``npm install -g sass`` and invoking ``make clean; make`` seems to solve the problem. One should further investigate this and adapt this document. 
     #. Build the initial environment for the scenarios via``cd /opt/insekta-web/insekta; make testenv``.
     #. **TODO**: What about openvpn in the context of ``make testenv``? The Makefile also generates certs.
     #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
@@ -216,5 +215,5 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-web -R``.
 #. Copy the provided systemd service file to ``/etc/systemd/system`` and adapt it if necessary.
 #. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
-#. **TODO**: What about the previously generated openvpn certs? Does insekta-web need access to these, too?
+#. **TODO**: What about the previously generated openvpn certs? Does insekta-web need access to these, too? Yes, insekta-web needs access to the private key and the cert in order to sign new user certificates. The OpenVPN server only needs the cert.
 
