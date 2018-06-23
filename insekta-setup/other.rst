@@ -1,15 +1,3 @@
-Other
-=====
-
-
-Further TODOs
--------------
-#. **TODO**: iptables needs to be set up in order to forward traffic from vpn to libvirt. An example configuration can be found in the examples directory. This can be placed in ``/etc/network/if-up.d``.
-#. **TODO**: Additionally, the following command needs to be ran once: ``sysctl -w net.ipv4.ip_forward=1``.
-#. **TODO**: Setting up a network bridge for ?.
-#. **TODO**: Setup the routing information at openVPN and libvirt.
-
-
 Gain access to the virtual machine via virsh console
 ----------------------------------------------------
 #. Invoke the following two commands within the guest VM:
@@ -36,13 +24,12 @@ Gain access to the virtual machine via virsh console
 
 Setting up routing information
 ------------------------------
-#. **TODO**: This is still an open issue!
+ This is still an open issue!
 #. Debug note: Try to ``ping`` the target host from some other machine and run ``tcpdump -a icmp`` on the target host. Then keep on adjusting the routes until the ``ping`` is received.
 
 
 Network Bridge Definition
 -------------------------
-#. **TODO**: This does not work yet!
 #. Append the following block to the end of file ``/etc/network/interfaces`` on the insekta host machine:
     
     ::
