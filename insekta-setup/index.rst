@@ -45,7 +45,6 @@ Setting up libvirt on the insekta host
 
 #. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
-#. **TODO**: setup a network bridge by modifying the file ``/etc/network/interfaces``. (Note: look this up in the old Insekta docs)
 #. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
 #. The next step is to setup a new storage pool called ``insekta``, which is used later on to store VM images. This can either be achieved via ``virt-manager`` or by running the following commands on the insekta host:
 
@@ -152,7 +151,6 @@ Note that the following steps must be performed on the insekta libvirt image. It
         API_AUTH = ('api', 'mypassword')
 
 #. Setup a SSH remote access from the running insekta libvirt image to the insekta host machine. Thereby, the insekta libvirt image can communicate with the libvirt daemon running on the insekta host machine.
-#. **TODO**: Is there anything else we have to configure here? Maybe at the insekta host machine?
 #. Setup the virtualenv environment:
 
     #. Create a new virtual environment ``python3 -m venv /opt/insekta-vm/insektavm/venv``.
@@ -167,7 +165,6 @@ Note that the following steps must be performed on the insekta libvirt image. It
 #. Adapt the rights via ``chown -c insekta /opt/insekta-vm -R``.
 #. Enable the service via ``systemctl enable insekta-vm.service`` and start it via ``systemctl start insekta-vm.service``.
 #. Setup ``nginx`` as a reverse proxy (see the instructions above).
-#. **TODO**: check if one has to create the ``VM_IMAGE_DIR`` folder and run ``chown``..
 
 
 Setting up the insekta-web component
@@ -203,9 +200,7 @@ Note that the following steps must be performed on the insekta libvirt image.
     #. Install dependencies via ``pipenv install``.
     #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
     #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
-    #. **TODO**: There is a bug which causes ``bootstrap.css`` to be empty. Installing ``sass`` globally via ``npm install -g sass`` and invoking ``make clean; make`` seems to solve the problem. One should further investigate this and adapt this document. 
     #. Build the initial environment for the scenarios via``cd /opt/insekta-web/insekta; make testenv``.
-    #. **TODO**: What about openvpn in the context of ``make testenv``? The Makefile also generates certs.
     #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
     #. Collect and copy the static files to the previously defined location via ``cd /opt/insekta-web/insekta; python manage.py collectstatic``.
     #. Invoke ``deactivate`` to leave the virtualenv shell.
@@ -215,5 +210,4 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. Adapt the rights via ``chown -c insekta /opt/insekta-web -R``.
 #. Copy the provided systemd service file to ``/etc/systemd/system`` and adapt it if necessary.
 #. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
-#. **TODO**: What about the previously generated openvpn certs? Does insekta-web need access to these, too? Yes, insekta-web needs access to the private key and the cert in order to sign new user certificates. The OpenVPN server only needs the cert.
 
