@@ -105,7 +105,7 @@ Note that the following steps must be performed on the insekta libvirt image.
     #. Spawn the virtualenv shell at the ``venv`` folder via ``source bin/activate``.
     #. Install dependencies via ``pipenv install``.
     #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
-    #. We use ``sass`` for css file generation. Hence, run ``npm i node-sass``.
+    #. We use ``sass`` for css file generation. Hence, run ``npm install -g sass``.
     #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
     #. Build the initial environment for the scenarios via ``cd /opt/insekta-web/insekta; make testenv``.
     #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
