@@ -20,8 +20,8 @@ Requirements
 
 Installing Debian on the insekta host
 -----------------------------------------
-#. Download the latest Debian image (preferably a netinst version) from `https://www.debian.org/CD/netinst/ <https://www.debian.org/CD/netinst/>`_. At the time of writing this guide you could fetch the ISO file by running ``wget -c https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.4.0-amd64-netinst.iso`` on your local machine.
-#. Create a bootable USB flash drive using the ISO file from the previous step. To do so run ``sudo dd if=~/debian-9.4.0-amd64-netinst.iso of=/dev/sdb42`` on your local machine. Note that ``of`` must be assigned the location of your USB flash drive. You can lookup your already mounted devices via ``df`` and use ``sudo fdisk -l`` for unnmounted devices. **Double-check the parameters for correctness before running this command.**
+#. Download the latest Debian image (preferably a netinst version) from `https://www.debian.org/CD/netinst/ <https://www.debian.org/CD/netinst/>`_. At the time of writing this guide you could fetch the ISO file by running ``wget -c https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso`` on your local machine. Note that this link might be outdated at the time you are reading this guide.
+#. Create a bootable USB flash drive using the ISO file from the previous step. To do so run ``sudo dd if=~/debian-9.5.0-amd64-netinst.iso of=/dev/sdb42`` on your local machine. Note that ``of`` must be assigned the location of your USB flash drive. You can lookup your already mounted devices via ``df`` and use ``sudo fdisk -l`` for unnmounted devices. **Double-check the parameters for correctness before running this command.**
 #. Plugin the bootable USB flash drive to the insekta host, power up the machine and boot from the USB flash drive. You might have to turn off ``Secure Boot`` in the
    BIOS before.
 #. Perform a typical debian installation, but make sure to enable ``SSH server``. You can disable ``Print server``; a desktop manager is not required either.
@@ -45,7 +45,6 @@ Setting up libvirt on the insekta host
 
 #. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
-#. Reload the network configuration via ``ifdown yourinterface && ifup yourinterface``.
 #. The next step is to setup a new storage pool called ``insekta``, which is used later on to store VM images. This can either be achieved via ``virt-manager`` or by running the following commands on the insekta host:
 
     #. ``virsh pool-define-as insekta dir - - - - "/var/lib/libvirt/images/insekta/"``.
@@ -74,14 +73,59 @@ Setting up the insekta libvirt image
 #. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` on this machine and connect to it from insekta host via SSH.
 
 
+Setting up the insekta-web component
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Note that the following steps must be performed on the insekta libvirt image.
+
+#. Install dependencies via ``apt install git make wget python3 python3-pip unzip gettext curl sudo python3-venv``.
+#. Install nodejs as npm via ``curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -`` and ``apt install -y nodejs``.
+#. If not already done before, install pipenv via ``pip3 install pipenv``.
+#. Clone the repository via ``cd /opt/; git clone https://github.com/Insekta/insekta-web.git; cd insekta-web``.
+#. Use the provided example configuration file via ``cp /opt/insekta-web/insekta/insekta/settings.py.example /opt/insekta-web/insekta/insekta/settings.py`` and adapt it.
+    ::
+      
+        # domain names or IP address allowed to access this service. Use the machine's IP or the respective domain name.
+        ALLOWED_HOSTS = ['420.420.420.420']
+        # location where static files are located
+        STATIC_ROOT = "/opt/insekta-static/insekta-web/static-root"
+        # location where media files are located
+        MEDIA_ROOT = "/opt/insekta-static/insekta-web/media-root" 
+        # the IP and port of the VPN server
+        VPN_SERVER = {'host': 'localhost', 'port': 1194}
+        # the URI where the insekta-vm API can be found
+        REMOTE_API_URL = 'http://localhost:8001/api/'
+        # authentication for the insekta-vm API
+        REMOTE_API_AUTH = ('api', 'mypassword')
+        # code required to register a new insekta account at insekta-web
+        INVITATION_CODE = 'supergeheim'
+
+#. Setup the virtualenv environment and generate static files:
+
+    #. Create a new virtual environment ``python3 -m venv /opt/insekta-web/insekta/venv``.
+    #. Spawn the virtualenv shell at the ``venv`` folder via ``source bin/activate``.
+    #. Install dependencies via ``pipenv install``.
+    #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
+    #. We use ``sass`` for css file generation. Hence, run ``npm i node-sass``.
+    #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
+    #. Build the initial environment for the scenarios via ``cd /opt/insekta-web/insekta; make testenv``.
+    #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
+    #. Collect and copy the static files to the previously defined location via ``cd /opt/insekta-web/insekta; python manage.py collectstatic``.
+    #. Invoke ``deactivate`` to leave the virtualenv shell.
+    
+#. Setup ``nginx`` as a reverse proxy (see the instructions above).
+#. If not already done before, create a system account for insekta via ``useradd --system insekta``.
+#. Adapt the rights via ``chown -c insekta /opt/insekta-web -R``.
+#. Copy the provided systemd service file to ``/etc/systemd/system`` and adapt it if necessary.
+#. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
+
+
 Setting up openvpn
 ^^^^^^^^^^^^^^^^^^
 Note that the following steps must be performed on the insekta libvirt image.
 
 #. Install the following dependencies via ``apt install build-essential libvirt-dev qemu-kvm git virtualenv python-libvirt python3-libvirt python3 python3-dev python-dev pkg-config openvpn iptables python3-pip``.
 #. Clone the ``insekta-vm`` repository to ``/opt`` and enter it via ``cd /opt/; git clone https://github.com/Insekta/insekta-vm.git; cd insekta-vm``.
-#. Copy the openvpn directory from ``insekta-vm/insektavm/examples/openvpn/`` to ``/etc/openvpn`` via ``cp -r /opt/insekta-vm/insektavm/examples/openvpn/* /etc/openvpn``.
-#. Make the ``learn-address.sh`` script executable by running ``chmod +x /etc/openvpn/server/learn-address.sh``.
+#. Copy the openvpn directory from ``insekta-vm/insektavm/examples/openvpn/`` to ``/etc/openvpn`` via ``cp -r /opt/insekta-vm/insektavm/examples/openvpn/* /etc/openvpn/server``.
 #. Create a system account for openvpn via ``useradd --system openvpn``.
 #. Change the file ownership of ``/etc/openvpn`` to ``openvpn`` via ``chown -R openvpn /etc/openvpn``.
 #. Enable the systemd service for openvpn via ``systemctl enable openvpn-server@server``.
@@ -115,7 +159,7 @@ Setting up the CA
       cp keys/server.crt /etc/openvpn/server/
       cp keys/server.key /etc/openvpn/server/
 
-#. Copy the certificate and the key of the ca to insekta-web, i.e., by running ``cp /etc/openvpn/server/ca.* /path/to/insekta-web/insekta/testenv/vpn/``.
+#. Copy the certificate and the key of the ca to insekta-web, i.e., by running ``cp /etc/openvpn/server/ca.* /opt/insekta-web/insekta/testenv/vpn/``.
 #. Finally, start the systemd service for openvpn via ``systemctl start openvpn-server@server``.
 
 
@@ -167,47 +211,5 @@ Note that the following steps must be performed on the insekta libvirt image. It
 #. Setup ``nginx`` as a reverse proxy (see the instructions above).
 
 
-Setting up the insekta-web component
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Note that the following steps must be performed on the insekta libvirt image.
 
-#. Install dependencies via ``apt install git make wget python3 python3-pip unzip gettext curl sudo python3-venv``.
-#. Install nodejs as npm via ``curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -`` and ``apt install -y nodejs``.
-#. If not already done before, install pipenv via ``pip3 install pipenv``.
-#. Clone the repository via ``cd /opt/; git clone https://github.com/Insekta/insekta-web.git; cd insekta-web``.
-#. Use the provided example configuration file via ``cp /opt/insekta-web/insekta/insekta/settings.py.example /opt/insekta-web/insekta/insekta/settings.py`` and adapt it.
-    ::
-      
-        # domain names or IP address allowed to access this service. Use the machine's IP or the respective domain name.
-        ALLOWED_HOSTS = ['420.420.420.420']
-        # location where static files are located
-        STATIC_ROOT = "/opt/insekta-static/insekta-web/static-root"
-        # location where media files are located
-        MEDIA_ROOT = "/opt/insekta-static/insekta-web/media-root" 
-        # the IP and port of the VPN server
-        VPN_SERVER = {'host': 'localhost', 'port': 1194}
-        # the URI where the insekta-vm API can be found
-        REMOTE_API_URL = 'http://localhost:8001/api/'
-        # authentication for the insekta-vm API
-        REMOTE_API_AUTH = ('api', 'mypassword')
-        # code required to register a new insekta account at insekta-web
-        INVITATION_CODE = 'supergeheim'
-
-#. Setup the virtualenv environment and generate static files:
-
-    #. Create a new virtual environment ``python3 -m venv /opt/insekta-web/insekta/venv``.
-    #. Spawn the virtualenv shell via ``source /opt/insekta-web/insekta/venv/bin/activate``.
-    #. Install dependencies via ``pipenv install``.
-    #. We use ``gunicorn`` for serving this application. Hence, run ``pip install gunicorn`` to install it.
-    #. Generate the static files by invoking the Makefile via ``cd /opt/insekta-web/insekta; make``.
-    #. Build the initial environment for the scenarios via``cd /opt/insekta-web/insekta; make testenv``.
-    #. Run ``cd /opt/insekta-web/insekta; python manage.py migrate``
-    #. Collect and copy the static files to the previously defined location via ``cd /opt/insekta-web/insekta; python manage.py collectstatic``.
-    #. Invoke ``deactivate`` to leave the virtualenv shell.
-    
-#. Setup ``nginx`` as a reverse proxy (see the instructions above).
-#. If not already done before, create a system account for insekta via ``useradd --system insekta``.
-#. Adapt the rights via ``chown -c insekta /opt/insekta-web -R``.
-#. Copy the provided systemd service file to ``/etc/systemd/system`` and adapt it if necessary.
-#. Enable the service via ``systemctl enable insekta-web.service`` and start it via ``systemctl start insekta-web.service``.
 
