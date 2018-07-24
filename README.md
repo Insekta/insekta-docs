@@ -1,1 +1,1 @@
-This repository contains the documentation for insekta-web and insekta-vm. You can find the [online documentation](https://insekta.readthedocs.io/) at Read The Docs.
+This repository contains the documentation for the Insekta platform, i.e., the insekta-web component, the insekta-vm component, and the openvpn configuration. You can find the documentation online at [Read the Docs](https://insekta.readthedocs.io/en/latest/).
