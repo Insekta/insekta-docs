@@ -18,9 +18,19 @@ Requirements
 -  Roughly 60 minutes of free time.
 
 
+Additional Files
+------------
+Exemplary configuration file, e.g., for the ``settings.py`` is often supplied in the respective project repository. In addition, the following configuration files are directly supplied within this directory:
+
+- :download:`insekta-vm <insekta-vm>` nginx configuration for insekta-vm
+- :download:`insekta-web <insekta-web>` nginx configuration for insekta-web
+- :download:`insekta-vm.service <insekta-vm.service>` systemd unit file for insekta-vm
+- :download:`insekta-web.service <insekta-web.service>` systemd unit file for insekta-web
+
+
 Installing Debian on the insekta host
 -----------------------------------------
-#. Download the latest Debian image (preferably a netinst version) from `https://www.debian.org/CD/netinst/ <https://www.debian.org/CD/netinst/>`_. At the time of writing this guide you could fetch the ISO file by running ``wget -c https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso`` on your local machine. Note that this link might be outdated at the time you are reading this guide.
+#. Download the latest Debian image (preferably a netinst version) from `https://www.debian.org/CD/netinst/ <https://www.debian.org/CD/netinst/>`_. At the time of writing this guide you could fetch the ISO file by running ``wget -c https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso`` on your local machine.
 #. Create a bootable USB flash drive using the ISO file from the previous step. To do so run ``sudo dd if=~/debian-9.5.0-amd64-netinst.iso of=/dev/sdb42`` on your local machine. Note that ``of`` must be assigned the location of your USB flash drive. You can lookup your already mounted devices via ``df`` and use ``sudo fdisk -l`` for unnmounted devices. **Double-check the parameters for correctness before running this command.**
 #. Plugin the bootable USB flash drive to the insekta host, power up the machine and boot from the USB flash drive. You might have to turn off ``Secure Boot`` in the
    BIOS before.
