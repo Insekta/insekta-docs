@@ -4,8 +4,10 @@ This & That
 Gain access to the virtual machine via virsh console
 ----------------------------------------------------
 #. Invoke the following two commands within the guest VM:
+
   - ``systemctl enable serial-getty@ttyS0.service``
   - ``systemctl start serial-getty@ttyS0.service``
+
 
 #. On the guest VM replace the following two lines in the file ``/etc/default/grub``
 

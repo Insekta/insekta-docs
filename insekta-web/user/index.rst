@@ -3,7 +3,7 @@ Insekta-Web User Management
 ===================================
 
 Creating a superuser account
--------------------------
+----------------------------
 
 Navigate into your local insekta-web installation and spawn a virtual environment shell using the command depicted below: 
 
