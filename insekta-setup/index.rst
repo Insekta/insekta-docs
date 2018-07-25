@@ -19,7 +19,7 @@ Requirements
 
 
 Additional Files
-------------
+----------------
 Exemplary configuration file, e.g., for the ``settings.py`` is often supplied in the respective project repository. In addition, the following configuration files are directly supplied within this directory:
 
 - :download:`insekta-vm <insekta-vm>` nginx configuration for insekta-vm
@@ -51,7 +51,7 @@ Setting up remote SSH access
 
 
 Setting up libvirt on the insekta host
--------------------------------------
+--------------------------------------
 
 #. Install libvirt dependencies via ``apt install libvirt-daemon-system``.
 #. Install OVMF for UEFI image support via ``apt install ovmf``.
