@@ -81,6 +81,15 @@ html_theme = 'alabaster'
 # documentation.
 #
 # html_theme_options = {}
+html_theme_options = {
+    'logo': 'logo.svg',
+    'logo_name': 'True',
+    'description': 'A Security Teaching Platform',
+    'github_user': 'Insekta',
+    'github_repo': 'insekta-docs',
+    'github_button': 'True',
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
