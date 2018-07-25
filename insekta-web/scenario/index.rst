@@ -1,29 +1,32 @@
 
 Insekta-Web Scenario Management
 ===================================
-
-A scenario is basically a directory containing the description of the scenario, some metadata and static files,
-like images.
+In the filesystem, a scenario is in essence just a directory containing the description of the scenario in html format, some metadata in json format and static files, like images.
 
 Scenarios in detail
 ------------------------- 
+A sample directory structure might look as follows:
 
-The directory structure will look like:
+::
 
-* example
+  Beispielszenario  
+  ├── meta.json  
+  ├── scenario.html  
+  └── static  
+      └── insekta.png
 
-  * scenario.html
-  * metadata.json
-  * static
-
-    * insekta.png
 
 scenario.html
 ^^^^^^^^^^^^^^
+This file contains the textual description of the scenario encoded in html format, which is enriched by Insekta specific templates. In most cases, a scenario comprises:
 
-This file contains the description for the scenario. It describes what the
-hacker needs to do to solve the scenario. Additionally it contains explanations of 
-what's going on. The description is written in html. Therefore, you can use html tags like:
+- a rough description of the context
+- a concise description of the task to be solved
+- a question whose answer - called secret - serves as a proof for solving the scenario
+- hints on solving the scenario
+- further links and references
+
+In the following, a non-exhaustive list of html tags and templates is depicted:
 
 ``headings``
 
@@ -61,7 +64,7 @@ You can also set up challenges in form of multiple/single choice or fill-in-the-
         {% call choice(name='other') %}Etwas anderes{% endcall %}
     {% endcall %}
 
-You have to mark the correct answer with a flag ('correct=True').
+You have to mark the correct answer with a flag, i.e., ``correct=True``.
 
 ``multiple-choice``
 
@@ -118,17 +121,17 @@ IP-address of the started virtual machine:
 .. code-block:: html
 
     {% call code(language='html+jinja') %}
-        <a href="http://{{ vm_ip('main') }}">Webseite auf der VM</a>
+        <a href="http://{{ vm_ip('main') }}">Link to the VM</a>
     {% endcall %}
 
 If the machine is not started, then a placeholder is used.
 
-You own IP-address:
+Your IP-address within the VPN subnet:
 
 .. code-block:: html
 
     {% call code(language='html+jinja') %}
-        <p>Deine IP im VPN ist {{ vpn_ip }}</p>
+        <p>Your IP-address within the VPN subnet is {{ vpn_ip }}</p>
     {% endcall %}
 
 Check if virtual machine is started:
@@ -137,19 +140,17 @@ Check if virtual machine is started:
 
     {% call code(language='html+jinja') %}
         {% if vms %}
-            <p>Deine virtuelle Maschine wurde gestartet, durch erreichst sie unter {{ vm_ip('main') }}.</p>
+            <p>Your virtual machine has been started. You can reach it at {{ vm_ip('main') }}.</p>
         {% else %}
-            <p>Bitte starte die virtuellen Maschinen, um die folgende Aufgabe zu lösen.</p>
+            <p>Please start the virtual machine in order to solve the scenario.</p>
         {% endif %}
     {% endcall %}
 
-A whole example of a 'scenario.html' is available :download:`here <example.html>`.
+A more detailed list of available html tags and templates is available :download:`here <example.html>`.
 
 metadata.json
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This file contains some metadata about the scenario. It is valid json and
-looks like:
+This file contains the metadata of the scenario encoded in json. A sample file might look as follows:
 
 .. literalinclude:: metadata.json
    :language: JSON
@@ -157,98 +158,85 @@ looks like:
 ``title``
    The title of the scenario.
 
-``required_components``
-      
-
 ``vm_resource``
-   The name of the vm resource which is started (configured in insekta-vm).
+   The name of the VM resource associated with this scenario as configured in insekta-vm.
 
 
 static
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Put any files in this directory and you can reference them in your ``scenario.html``. For example, see above
-how to reference images within the ``scenario.html``.
+^^^^^^
+This directory comprises all static files that are reference in the ``scenario.html``. For example, to display additional images in the scenario as detailed above.
 
 Loading Scenarios
-------------------------------
-
+-----------------
 Registering is easy:
    
 .. code-block:: bash
 
    ./manage.py loadscenario <name of your scenario>
 
-If you want to update the image, just call it again. The name of your scenario is the name of the folder.
-You also have to use this name as key in process of setting up the scenario within the admin pages.
+If you want to update the image, just call it again. The name of your scenario is the name of the folder. You also have to use this name as an identifier when setting up the scenario in the Insekta admin backend.
 
 .. warning::
-   Updating a scenario destroys all existing domains that belong to this
-   scenario. However, submitted secrets are not lost.
+   Updating a scenario destroys all existing domains that belong to this scenario. However, submitted secrets are not lost.
 
 
-Create Scenario
-------------------------------
-
-First of all, you have to create a Scenario. That's can be done after logging in as administrator on insekta-web site. Then, you have to choose
-'Admin' tab, scroll down to the group of functions called 'Scenarios' and click on option 'Scenarios'. You suppose to see the view which is 
-presented on picture below.
+Creating a Scenario
+-------------------
+First, you have to create a scenario in the insekta-web admin backend at the item ``Scenarios`` in section ``Scenarios``. Your screen should now look similar to the picture below:
 
 .. image:: /_static/scenarios_1.JPG
   :alt: Add scenario
 
-After clicking on 'ADD SCENARIO' button, you will get next view:
+After clicking the ``ADD SCENARIO`` button located in the top right, you screen should then look as follows:
 
 .. image:: /_static/scenarios_2.JPG
-  :alt: Fill mandatory fields
+  :alt: Fill the mandatory fields
 
-You have to fill mandatory fields in the following way:
+Here, you have to fill the mandatory fields:
 
-.. code-block:: bash
+.. code-block:: text
 
    Key: <name of your scenario>
    Title: Beispielszenario <for example>
    Num tasks: <arbitarily>
    Enabled: <checked>
 
-After that, by clicking on the 'Save' button 'Scenario' is created and you will get next view:
+The scenario is created once the ``SAVE`` button located in the bottom right is clicked.
 
 .. image:: /_static/scenarios_3.JPG
   :alt: List of scenarios
 
 
-Create Course
-------------------------------
-
-If you want to be able to create a 'Scenario Group', first of all, you have to create a Course. Option for this action is in the same fild as 'Scenarios' option. After you click on th e 'Courses' option, you suppose to see the view which is presented on picture below.
+Creating a Course
+-----------------
+In order to create a ``Scenario Group``, you have to create a ``Course`` first. Navigate to the item ``Courses`` in section ``Scenarios``. Your screen should now look similar to the picture below:
 
 .. image:: /_static/course_1.JPG
   :alt: Add course
 
-After clicking on 'ADD SCENARIO' button, you will get next view: In that view you have to fill mandatory(red) fields and don't forget to check enable checkbox.
+After clicking the ``ADD SCENARIO`` button, your view sould then look similar to the picture below. Here, you have to fill the mandatory fields (highlighted in a red box). Make sure to select the ``Enabled`` checkbox.
 
 .. image:: /_static/course_2.JPG
-  :alt: Fill mandatory fields
+  :alt: Fill the mandatory fields
 
-After that, by clicking on the 'Save' button 'Course' is created and you will get next view:
+The course is created once the ``SAVE`` button is clicked. This also forwards you to the next view as depicted below:
 
 .. image:: /_static/course_3.JPG
   :alt: List of courses
 
-Create Scenario Group
-------------------------------
-
-Finally, after 'Scenario' and 'Course' has been made, you are able to create a 'Scenario group'. Option for this action is in the same fild as 'Scenarios' and 'Courses'. After you click on the 'Scenario groups', you suppose to see the view which is presented on picture below.
+Creating a Scenario Group
+-------------------------
+After creating a scenario and a course, you can create a ``Scenario group``. To do so, navigate to the item ``Scenario groups`` in section ``Scenarios``. Your screen should now look similar to the picture below:
 
 .. image:: /_static/groups_1.JPG
   :alt: Add Scenario group
 
-After clicking on 'ADD SCENARIO GROUP' button, you will get next view. In that view you have to fill mandatory(red) fields:
+After clicking the ``ADD SCENARIO GROUP`` button in the top right corner, you are forwarded to the next view.
 
 .. image:: /_static/groups_2.JPG
   :alt: Fill mandatory fields
 
-As you can see, two mandatory fields requires selection of the 'Course' and 'Scenario'. That's the reason because this two entities suppose to be created before 'Scenario group'. After that, by clicking on the 'Save' button 'Scenario group' is created and you will get next view:
+As ``Course`` and ``Scenario`` are mandatory fields, these had to be created before. When clicking the ``SAVE`` button, the Scenario group gets created and your are forwarded to the list of scenario groups:
 
 .. image:: /_static/groups_3.JPG
    :alt: List of Scenario groups

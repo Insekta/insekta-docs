@@ -7,5 +7,5 @@
         "css": [],
         "js": []
     },
-    "vm_resource": "<name of vm resource>"
+    "vm_resource": "my-virtual-machine.qcow2"
 }
