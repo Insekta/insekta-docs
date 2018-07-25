@@ -10,9 +10,7 @@ Insekta-VM Documentation
 Installation
 -------------------------
 
-The installation guide to the insekta-vm project is documented within the installation.rst (see `here`_).
-
-.. _here: https://github.com/Insekta/insekta-vm
+The installation guide to the insekta-vm project is documented `here <../insekta-setup/index.html>`_.
 
 Administration
 -------------------------
