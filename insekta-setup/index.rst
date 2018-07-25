@@ -31,10 +31,10 @@ Exemplary configuration file, e.g., for the ``settings.py`` is often supplied in
 Installing Debian on the insekta host
 -----------------------------------------
 #. Download the latest Debian image (preferably a netinst version) from `https://www.debian.org/CD/netinst/ <https://www.debian.org/CD/netinst/>`_. At the time of writing this guide you could fetch the ISO file by running ``wget -c https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.5.0-amd64-netinst.iso`` on your local machine.
-#. Create a bootable USB flash drive using the ISO file from the previous step. To do so run ``sudo dd if=~/debian-9.5.0-amd64-netinst.iso of=/dev/sdb42`` on your local machine. Note that ``of`` must be assigned the location of your USB flash drive. You can lookup your already mounted devices via ``df`` and use ``sudo fdisk -l`` for unnmounted devices. **Double-check the parameters for correctness before running this command.**
+#. Create a bootable USB flash drive using the ISO file from the previous step. To do so run ``sudo dd if=~/debian-9.5.0-amd64-netinst.iso of=/dev/sdb42`` on your local machine. Note that ``of`` must be assigned the location of your USB flash drive. You can lookup your already mounted devices via ``df`` and use ``sudo fdisk -l`` for unmounted devices. **Double-check the parameters for correctness before running this command.**
 #. Plugin the bootable USB flash drive to the insekta host, power up the machine and boot from the USB flash drive. You might have to turn off ``Secure Boot`` in the
    BIOS before.
-#. Perform a typical debian installation, but make sure to enable ``SSH server``. You can disable ``Print server``; a desktop manager is not required either.
+#. Perform a typical Debian installation, but make sure to enable ``SSH server``. You can disable ``Print server``; a desktop manager is not required either.
 #. Finally, reboot the machine, boot from the hard disk, and remove the USB flash drive.
 
 
@@ -77,7 +77,7 @@ Setting up the insekta libvirt image
 ------------------------------------
 #. Install ``virt-manager`` on your local machine, e.g., by running ``apt install virt-manager`` on Debian.
 #. Download a Debian image as previously done for the insekta host machine and store it in ``/var/lib/libvirt/images`` on the insekta host.
-#. Setup a new Debian virtual machine using the wizard provided by ``virt-manager``. Make sure to check ``customize configuration before install`` to enable UEFI firmware and the i440FX chipest. You most likely want to turn on ``start vm on host boot`` as well.
+#. Setup a new Debian virtual machine using the wizard provided by ``virt-manager``. Make sure to check ``customize configuration before install`` to enable UEFI firmware and the i440FX chipset. You most likely want to turn on ``start vm on host boot`` as well.
 #. Perform a normal Debian installation as done before.
 #. Generate a new SSH key pair on the insekta host using ``ssh-keygen`` and setup SSH remote access as shown before such that you can connect from insekta host to the new insekta libvirtd image.
 #. Lookup the IP address of the insekta libvirtd image by running ``ifconfig`` or ``ip a`` on this machine and connect to it from insekta host via SSH.
