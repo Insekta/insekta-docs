@@ -27,6 +27,11 @@ Gain access to the virtual machine via virsh console
 #. Finally, connect to the guest VM using ``virsh console name-of-your-vm``.
 
 
+Scenario VM Life Cycle Management
+---------------------------------
+While a scenario page is open, the web page repeatedly sends AJAX requests to the insekta-vm server to ensure that VMs are not killed while they are in use. After closing a scenario tab, insekta-vm sets the spawned scenario VM to ``expired`` after a certain number of minutes. To remove expired VMs manually, spawn a venv shell at ``insekta-vm/insektavm`` and run ``$ python manage.py destroy_expired_vms`` to remove all expired VMs. This task can and should be automated, e.g., using a a time-based job scheduler like ``cron``.
+
+
 Network Bridge Definition
 -------------------------
 #. Warning: this section needs further testing and documentation.
