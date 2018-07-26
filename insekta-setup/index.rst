@@ -92,6 +92,7 @@ Note that the following steps must be performed on the insekta libvirt image.
 #. If not already done before, install pipenv via ``pip3 install pipenv``.
 #. Clone the repository via ``cd /opt/; git clone https://github.com/Insekta/insekta-web.git; cd insekta-web``.
 #. Use the provided example configuration file via ``cp /opt/insekta-web/insekta/insekta/settings.py.example /opt/insekta-web/insekta/insekta/settings.py`` and adapt it.
+
     ::
       
         # domain names or IP address allowed to access this service. Use the machine's IP or the respective domain name.
@@ -145,6 +146,7 @@ Setting up the CA
 """""""""""""""""
 #. Enter ``/usr/share/easy-rsa``, invoke ``make-cadir cadir`` and enter the created ``cadir`` directory via ``cd /usr/share/easy-rsa; make-cadir cadir; cd cadir``.
 #. Adjust the certificate fields in file ``vars``, e.g., via ``vim /usr/share/easy-rsa/cadir/vars``. The fields that need to be adjusted can be found at the bottom of the file and a sample configuration might look as follows:
+
     ::
       
         # These are the default values for fields
@@ -163,6 +165,7 @@ Setting up the CA
 #. Run ``./build-ca``. Note that this will ask you to confirm the previously configured certificate fields by pressing enter.
 #. Run ``./build-key-server server``. This might take some time for generating the key pair. It will also ask you again to confirm the previously configured certificate fields. In addition, enter ``y`` for signing, ``y`` for committing, and ``n`` for not challenging.
 #. Copy the generated certificates and the server key to ``/etc/openvpn/server/`` via:
+
     ::
 
       cp keys/ca.crt /etc/openvpn/server/
@@ -191,6 +194,7 @@ Note that the following steps must be performed on the insekta libvirt image. It
 
 #. Install pipenv via ``pip3 install pipenv`` and venv via ``apt install python3-venv``.
 #. Copy the provided example settings file via ``cp /opt/insekta-vm/insektavm/insektavm/settings.py.example /opt/insekta-vm/insektavm/insektavm/settings.py`` and adapt it.
+
     ::
   
         # domain names or IP address allowed to access this service. Use the machine's IP or the respective domain name.
